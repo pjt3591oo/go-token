@@ -27,6 +27,9 @@ func NewAccount() string {
 	return converted
 }
 
-func Allocation(balance int) {
-	BalanceOf[NewAccount()] = balance
+func Allocation(balance int) string {
+	createdAccount := NewAccount()
+	BalanceOf[createdAccount] = balance
+
+	return createdAccount
 }
