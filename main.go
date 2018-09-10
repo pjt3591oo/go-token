@@ -29,7 +29,7 @@ func main() {
 		// fmt.Println("test case 1. transfer retulr : ", txId1, account.BalanceOf[accounts[0]], account.BalanceOf[accounts[1]])
 	}
 
-	txId2, receiptIdIn2, receiptIdOut2, err2 := account.BalanceOf[accounts[0]].Transfer(accounts[2], 10)
+	txId2, receiptIdIn2, receiptIdOut2, err2 := account.BalanceOf[accounts[2]].Transfer(accounts[0], 10)
 
 	if err2 {
 		fmt.Println("test case 2. Filed: amount lack")
@@ -38,7 +38,7 @@ func main() {
 		// fmt.Println("test case 2. transfer retulr : ", txId2, account.BalanceOf[accounts[0]], account.BalanceOf[accounts[1]])
 	}
 
-	txId3, receiptIdIn3, receiptIdOut3, err3 := account.BalanceOf[accounts[0]].Transfer(accounts[1], 20)
+	txId3, receiptIdIn3, receiptIdOut3, err3 := account.BalanceOf[accounts[0]].Transfer(accounts[2], 20)
 
 	if err3 {
 		fmt.Println("test case 3. Filed: amount lack")

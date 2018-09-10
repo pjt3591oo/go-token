@@ -37,6 +37,14 @@ func GetReceipt(receiptId string) string {
 }
 
 func ShowAccountReceipt(toAccount string) receipt {
+	// startReceiptId = AccountReceipt[toAccount].ReceiptId
+	i := 0
+	for receiptId := AccountReceipt[toAccount].ReceiptId; i < 2; i++ {
+		fmt.Println(Receipt[receiptId])
+		receiptId = Receipt[receiptId].NextReceiptId
+
+	}
+
 	return AccountReceipt[toAccount]
 }
 
