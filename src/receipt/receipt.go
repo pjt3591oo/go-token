@@ -5,8 +5,6 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"fmt"
-
-	"../transaction"
 )
 
 type receipt struct {
@@ -38,6 +36,10 @@ func GetReceipt(receiptId string) string {
 	return GetJson(*Receipt[receiptId])
 }
 
+func ShowAccountReceipt(toAccount string) receipt {
+	return AccountReceipt[toAccount]
+}
+
 func GetJson(data receipt) string {
 	U, _ := json.Marshal(data)
 	var usr receipt
@@ -50,9 +52,8 @@ func (PrevReceipt *receipt) SetNextReceiptId(nextReceiptId string) {
 	PrevReceipt.NextReceiptId = nextReceiptId
 }
 
-func AddReceipt(txId string, timestamp string) string {
-	toAccount := transaction.Transaction[txId].To
-	receiptId := Sha256(txId + timestamp + timestamp)
+func AddReceipt(txId string, toAccount string, status string, timestamp string) string {
+	receiptId := Sha256(txId + timestamp + status)
 	// fromAccount := transaction.Transaction[txId].From
 
 	// 각각의 마지막 내역에 추가된 내역의 ID를 nextReceiptId에 넣는다
@@ -67,7 +68,7 @@ func AddReceipt(txId string, timestamp string) string {
 		NextReceiptId: "",
 		PrevRecieptId: toPrevRecieptId,
 		LastRecieptId: receiptId,
-		Status:        "In",
+		Status:        status,
 	}
 
 	d := GetJson(AccountReceipt[toAccount])
@@ -78,5 +79,6 @@ func AddReceipt(txId string, timestamp string) string {
 		Receipt[toPrevRecieptId].SetNextReceiptId(Receipt[receiptId].LastRecieptId)
 	}
 	AccountLastReceiptId[toAccount] = receiptId
+
 	return receiptId
 }

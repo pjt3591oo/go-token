@@ -43,9 +43,9 @@ func Allocation(cardId string, balance int, kind string) string {
 	return createdAccount
 }
 
-func (account *Account) Transfer(to string, amount int) (string, string, bool) {
+func (account *Account) Transfer(to string, amount int) (string, string, string, bool) {
 	if account.Value < amount {
-		return "", "", true
+		return "", "", "", true
 	}
 
 	account.Value -= amount
@@ -55,7 +55,9 @@ func (account *Account) Transfer(to string, amount int) (string, string, bool) {
 
 	txId := transaction.CreateTransaction(account.Address, to, amount, timestamp)
 
-	receiptId := receipt.AddReceipt(txId, timestamp)
+	// receiptId := receipt.AddReceipt(txId, timestamp)
+	receiptIdOut := receipt.AddReceipt(txId, account.Address, "OUT", timestamp)
+	receiptIdIn := receipt.AddReceipt(txId, to, "IN", timestamp)
 
-	return txId, receiptId, false
+	return txId, receiptIdIn, receiptIdOut, false
 }
