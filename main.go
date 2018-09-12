@@ -7,7 +7,7 @@ import (
 	"./src/account"
 	"./src/receipt"
 
-	"github.com/withmandala/go-log"
+	"github.com/withmandala/go-log" // https://github.com/Mandala/go-log
 )
 
 func main() {
