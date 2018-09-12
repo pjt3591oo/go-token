@@ -4,7 +4,9 @@ import (
 	"crypto/sha256"
 	"encoding/hex"
 	"encoding/json"
-	"fmt"
+	"os"
+
+	log "github.com/withmandala/go-log"
 )
 
 type receipt struct {
@@ -20,6 +22,9 @@ var AccountLastReceiptId = make(map[string]string)
 
 var Receipt = make(map[string]*receipt)       // 각각의 결과를 하나하나 키로 저장
 var AccountReceipt = make(map[string]receipt) // 각각의 결과를 유저에게 리스트 형태로 저장
+
+// var logger = log.New(os.Stderr).WithColor().WithDebug()
+var logger = log.New(os.Stderr).WithColor().WithoutTimestamp()
 
 func Sha256(message string) string {
 	hash := sha256.New()
@@ -39,9 +44,13 @@ func GetReceipt(receiptId string) string {
 func ShowAccountReceipt(toAccount string) receipt {
 	// startReceiptId = AccountReceipt[toAccount].ReceiptId
 	i := 0
-	for receiptId := AccountReceipt[toAccount].ReceiptId; i < 2; i++ {
-		fmt.Println(Receipt[receiptId])
+	for receiptId := AccountReceipt[toAccount].ReceiptId; true; i++ {
+		logger.Info(GetReceipt(receiptId))
 		receiptId = Receipt[receiptId].NextReceiptId
+
+		if receiptId == "" {
+			break
+		}
 
 	}
 
@@ -67,8 +76,8 @@ func AddReceipt(txId string, toAccount string, status string, timestamp string) 
 	// 각각의 마지막 내역에 추가된 내역의 ID를 nextReceiptId에 넣는다
 	toPrevRecieptId := AccountLastReceiptId[toAccount]
 
-	fmt.Println("\n toPrevRecieptId : ", toPrevRecieptId)
-	fmt.Println(GetJson(AccountReceipt[toAccount]))
+	logger.Debug("\n toPrevRecieptId : ", toPrevRecieptId)
+	logger.Debug(GetJson(AccountReceipt[toAccount]))
 
 	Receipt[receiptId] = &receipt{
 		ReceiptId:     receiptId,
