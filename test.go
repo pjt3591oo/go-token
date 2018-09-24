@@ -1,14 +1,15 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"strconv"
+)
 
 func main() {
-	type account struct {
-		value int    // 토큰 량
-		kind  string // user, store 구분
+	str := "123"
+	n, err := strconv.ParseInt(str, 10, 64)
+	if err == nil {
+		fmt.Printf("%d of type %T", n, n)
 	}
-	var BalanceOf = make(map[string]account)
-	BalanceOf["test"] = account{value: 20, kind: "store"}
-	fmt.Println(BalanceOf["test"].value)
-	fmt.Println(BalanceOf["test"].kind)
+	fmt.Println(n)
 }
