@@ -29,7 +29,7 @@ $ go run main.go
 
 ### chaincode 
 
-[코드보러가기](https://github.com/pjt3591oo/go-token/blob/master/chaincode/token.go)
+[코드보러가기](https://github.com/pjt3591oo/hyperledger-fabric-token)
 
 ### chaincode query/invoke
 
