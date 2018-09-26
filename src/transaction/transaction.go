@@ -7,7 +7,7 @@ import (
 	"github.com/syndtr/goleveldb/leveldb"
 )
 
-type transaction struct {
+type Transaction struct {
 	TxId      string
 	From      string
 	To        string
@@ -15,10 +15,23 @@ type transaction struct {
 	Timestamp string
 }
 
-var Transaction = make(map[string]transaction)
+const DB_DIRECTORY = "db/transaction"
+
+func GetTransaction(txId string) (string, string) {
+	if utils.Sha256ValidCheck(txId) {
+		return "", "transaction ID가 옳바르지 않습니다."
+	}
+
+	db, _ := leveldb.OpenFile(DB_DIRECTORY, nil)
+	defer db.Close()
+
+	transactionAsBytes, _ := db.Get([]byte(txId), nil)
+
+	return string(transactionAsBytes), ""
+}
 
 func CreateTransaction(from string, to string, value int, timestamp string) (string, bool) {
-	db, err := leveldb.OpenFile("db/transaction", nil)
+	db, err := leveldb.OpenFile(DB_DIRECTORY, nil)
 	defer db.Close()
 
 	if err != nil {
@@ -27,15 +40,13 @@ func CreateTransaction(from string, to string, value int, timestamp string) (str
 
 	txId := utils.Sha256(from + to + string(value) + timestamp)
 
-	tx := transaction{
+	tx := Transaction{
 		TxId:      txId,
 		From:      from,
 		To:        to,
 		Value:     value,
 		Timestamp: timestamp,
 	}
-
-	Transaction[txId] = tx
 
 	transactionAsBytes, _ := json.Marshal(tx)
 	_ = db.Put([]byte(txId), transactionAsBytes, nil)

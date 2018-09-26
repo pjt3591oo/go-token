@@ -15,3 +15,11 @@ func Sha256(message string) string {
 
 	return mdStr
 }
+
+func Sha256ValidCheck(hashing string) bool {
+	if len(hashing) != 64 {
+		return true
+	}
+
+	return false
+}

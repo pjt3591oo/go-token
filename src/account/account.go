@@ -18,10 +18,10 @@ type Account struct {
 	Address string
 }
 
-var BalanceOf = make(map[string]*Account)
+const DB_DIRECTORY = "db/account"
 
 func isAddress(address string) bool {
-	db, _ := leveldb.OpenFile("db/account", nil)
+	db, _ := leveldb.OpenFile(DB_DIRECTORY, nil)
 	defer db.Close()
 
 	data, _ := db.Get([]byte(address), nil)
@@ -53,16 +53,14 @@ func Allocation(cardId string, balance int, kind string) (string, string) {
 		return "", "이미 account가 존재합니다."
 	}
 
-	BalanceOf[createdAccount] = &Account{balance, kind, createdAccount}
-
-	db, err := leveldb.OpenFile("db/account", nil)
+	db, err := leveldb.OpenFile(DB_DIRECTORY, nil)
 	defer db.Close()
 
 	if err != nil {
 		return "", "디비 연결중 문제발생"
 	}
 
-	createdAccountAsBytes, _ := json.Marshal(BalanceOf[createdAccount])
+	createdAccountAsBytes, _ := json.Marshal(createdAccount)
 	_ = db.Put([]byte(createdAccount), createdAccountAsBytes, nil)
 
 	return createdAccount, ""
@@ -105,7 +103,7 @@ func Transfer(from string, to string, amount int) (string, string, string, strin
 		return "", "", "", msg
 	}
 
-	db, _ := leveldb.OpenFile("db/account", nil)
+	db, _ := leveldb.OpenFile(DB_DIRECTORY, nil)
 	defer db.Close()
 
 	// 보내는 account 데이터 가져오기

@@ -2,12 +2,9 @@ package receipt
 
 import (
 	"encoding/json"
-	"fmt"
-	"os"
 
 	"../utils"
 	"github.com/syndtr/goleveldb/leveldb"
-	log "github.com/withmandala/go-log"
 )
 
 type Receipt struct {
@@ -31,40 +28,64 @@ const NODE_RECEIPT = "NODE_"
 const LAST_RECEIPT = "LAST_"
 const RECEIPT = "RECEIPT"
 
-var AccountLastReceiptId = make(map[string]string)
+const DB_DIRECTORY = "db/receipt"
 
-var logger = log.New(os.Stderr).WithColor().WithoutTimestamp()
-
-// func ShowAccountReceipt(toAccount string) receipt {
-// 	// startReceiptId = AccountReceipt[toAccount].ReceiptId
-// 	i := 0
-// 	for receiptId := AccountReceipt[toAccount].ReceiptId; true; i++ {
-// 		logger.Info(GetReceipt(receiptId))
-// 		receiptId = Receipt[receiptId].NextReceiptId
-
-// 		if receiptId == "" {
-// 			break
-// 		}
-
-// 	}
-
-// 	return AccountReceipt[toAccount]
-// }
-
-func GetReceipt(receiptId string) string {
-	db, _ := leveldb.OpenFile("db/receipt", nil)
+func GetAllReceipt(account string) []Receipt {
+	db, _ := leveldb.OpenFile(DB_DIRECTORY, nil)
 	defer db.Close()
 
-	// receipt := Receipt{}
+	var receipts []Receipt
 
-	receiptAsBytes, _ := db.Get([]byte(NODE_RECEIPT+receiptId+RECEIPT), nil)
-	// json.Unmarshal(receiptAsBytes, &receipt)
+	RootReceiptAsBytes, _ := db.Get([]byte(ROOT_RECEIPT+account+RECEIPT), nil)
+	rootReceipt := RootReceipt{}
+	json.Unmarshal(RootReceiptAsBytes, &rootReceipt)
+
+	receiptAsBytes, _ := db.Get([]byte(NODE_RECEIPT+rootReceipt.ReceiptId+RECEIPT), nil)
+	receipt := Receipt{}
+	json.Unmarshal(receiptAsBytes, &receipt)
+
+	for receipt.ReceiptId != "" {
+
+		receipts = append(receipts, receipt)
+
+		if receipt.NextReceiptId == "" {
+			break
+		}
+
+		d, _ := db.Get([]byte(NODE_RECEIPT+receipt.NextReceiptId+RECEIPT), nil)
+		json.Unmarshal(d, &receipt)
+	}
+
+	return receipts
+}
+
+func GetLastReceipt(account string) string {
+	db, _ := leveldb.OpenFile(DB_DIRECTORY, nil)
+	defer db.Close()
+
+	receiptAsBytes, _ := db.Get([]byte(LAST_RECEIPT+account+RECEIPT), nil)
+
+	return string(receiptAsBytes)
+}
+func GetRooteceipt(account string) string {
+	db, _ := leveldb.OpenFile(DB_DIRECTORY, nil)
+	defer db.Close()
+
+	receiptAsBytes, _ := db.Get([]byte(ROOT_RECEIPT+account+RECEIPT), nil)
 
 	return string(receiptAsBytes)
 }
 
+func GetSpecificReceipt(receiptId string) string {
+	db, _ := leveldb.OpenFile(DB_DIRECTORY, nil)
+	defer db.Close()
+
+	receiptAsBytes, _ := db.Get([]byte(NODE_RECEIPT+receiptId+RECEIPT), nil)
+	return string(receiptAsBytes)
+}
+
 func AddReceipt(txId string, toAccount string, status string, timestamp string) string {
-	db, _ := leveldb.OpenFile("db/receipt", nil)
+	db, _ := leveldb.OpenFile(DB_DIRECTORY, nil)
 	defer db.Close()
 
 	receiptId := utils.Sha256(txId + timestamp + status)
@@ -76,9 +97,6 @@ func AddReceipt(txId string, toAccount string, status string, timestamp string) 
 	lr, _ := db.Get([]byte(LAST_RECEIPT+toAccount+RECEIPT), nil) // 마지막 노드
 	lastReceipt := LastReceipt{}
 	json.Unmarshal([]byte(lr), &lastReceipt)
-
-	e, _ := json.Marshal(lastReceipt)
-	fmt.Println("*lstReceipt*: ", string(e))
 
 	receipt := Receipt{
 		ReceiptId:     receiptId,
@@ -94,7 +112,6 @@ func AddReceipt(txId string, toAccount string, status string, timestamp string) 
 		rootReceipt.ReceiptId = receiptId
 		rootReceiptAsBytes, _ := json.Marshal(receipt)
 
-		fmt.Println("**root receipt id**", string(rootReceiptAsBytes))
 		db.Put([]byte(ROOT_RECEIPT+toAccount+RECEIPT), rootReceiptAsBytes, nil)
 		db.Put([]byte(NODE_RECEIPT+receiptId+RECEIPT), receiptAsBytes, nil)
 	} else {
@@ -112,7 +129,6 @@ func AddReceipt(txId string, toAccount string, status string, timestamp string) 
 
 	lastReceipt.ReceiptId = receiptId
 	lastReceiptAsBytes, _ := json.Marshal(lastReceipt)
-	fmt.Println("***last receipt id***", string(lastReceiptAsBytes))
 	db.Put([]byte(LAST_RECEIPT+toAccount+RECEIPT), lastReceiptAsBytes, nil)
 
 	return receiptId
