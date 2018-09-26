@@ -1,4 +1,4 @@
-# chaincode
+# demo token
 
 # 목차
 
