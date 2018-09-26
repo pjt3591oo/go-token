@@ -2,11 +2,11 @@
 
 # 목차
 
-* (의존성 모듈 설치)[https://github.com/pjt3591oo/go-token#user-content-dependencies]
-* (실행 / 빌드하는 방법)[https://github.com/pjt3591oo/go-token#user-content-run--build]
-* (사용법)[https://github.com/pjt3591oo/go-token#user-content-how-to-use]
-* (database)[https://github.com/pjt3591oo/go-token#user-content-database]
-* (체인코드 링크)[https://github.com/pjt3591oo/go-token#user-content-chaincode-1]
+* [의존성 모듈 설치](https://github.com/pjt3591oo/go-token#user-content-dependencies)
+* [실행 / 빌드하는 방법](https://github.com/pjt3591oo/go-token#user-content-run--build)
+* [사용법](https://github.com/pjt3591oo/go-token#user-content-how-to-use)
+* [database](https://github.com/pjt3591oo/go-token#user-content-database)
+* [체인코드 링크](https://github.com/pjt3591oo/go-token#user-content-chaincode-1)
 
 ### dependencies
 
