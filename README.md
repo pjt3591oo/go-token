@@ -9,7 +9,8 @@
 ### dependencies
 
 ```bash
-$ go get github.com/withmandala/go-log
+$ go get github.com/withmandala/go-log       # log lib
+$ go get github.com/syndtr/goleveldb/leveldb # levelDB
 ```
 
 ### run & build

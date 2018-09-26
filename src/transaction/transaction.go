@@ -1,8 +1,10 @@
 package transaction
 
 import (
-	"crypto/sha256"
-	"encoding/hex"
+	"encoding/json"
+
+	"../utils"
+	"github.com/syndtr/goleveldb/leveldb"
 )
 
 type transaction struct {
@@ -15,20 +17,15 @@ type transaction struct {
 
 var Transaction = make(map[string]transaction)
 
-func Sha256(message string) string {
-	hash := sha256.New()
+func CreateTransaction(from string, to string, value int, timestamp string) (string, bool) {
+	db, err := leveldb.OpenFile("db/transaction", nil)
+	defer db.Close()
 
-	hash.Write([]byte(message))
+	if err != nil {
+		return "", true
+	}
 
-	md := hash.Sum(nil)
-	mdStr := hex.EncodeToString(md)
-
-	return mdStr
-}
-
-func CreateTransaction(from string, to string, value int, timestamp string) string {
-
-	txId := Sha256(from + to + string(value) + timestamp)
+	txId := utils.Sha256(from + to + string(value) + timestamp)
 
 	tx := transaction{
 		TxId:      txId,
@@ -39,5 +36,9 @@ func CreateTransaction(from string, to string, value int, timestamp string) stri
 	}
 
 	Transaction[txId] = tx
-	return txId
+
+	transactionAsBytes, _ := json.Marshal(tx)
+	_ = db.Put([]byte(txId), transactionAsBytes, nil)
+
+	return txId, false
 }
