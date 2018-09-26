@@ -40,7 +40,7 @@ $ go run cli.go
 6. 특정 receipt 조회
 7. 특정 account에 발생된 receipt 조회
 
-* **```0. build```***
+* **```0. build```**
 
 ```bash
 $ go build cli.go
