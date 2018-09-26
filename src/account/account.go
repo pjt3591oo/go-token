@@ -2,7 +2,6 @@ package account
 
 import (
 	"encoding/json"
-	"fmt"
 	"strconv"
 	"time"
 
@@ -92,11 +91,9 @@ func accountCheck(from string, to string) (bool, string) {
 	// 1. address 길이확이
 	// 2. address 존재확인
 	if AccountInvalidCheck(from) == true {
-		fmt.Println("invalie account")
 		return true, "invalid from account"
 	}
 	if AccountInvalidCheck(to) == true {
-		fmt.Println("invalie account")
 		return true, "invalid to account"
 	}
 

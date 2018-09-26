@@ -23,6 +23,7 @@ func main() {
 	logger := log.New(os.Stderr).WithColor().WithDebug().WithoutTimestamp()
 	transfer := new(TransferFlag)
 
+	// option 처리
 	accountKey := flag.String("createaccount", "", "create account")
 
 	isTransfer := flag.String("istransfer", "0", "해당 옵션에 1을 전달할 경우 from, to, value 인자를 전달해야 함")
@@ -37,16 +38,17 @@ func main() {
 	searchTx := flag.String("searchtx", "", "transaction 조회")
 	searchAccount := flag.String("searchaccount", "", "account 조회")
 
+	// option 파싱
 	flag.Parse()
 
 	if *accountKey != "" {
-		account, accountCreateErr := account.Allocation(*accountKey, 100, "user")
+		address, accountCreateErr := account.Allocation(*accountKey, 100, "user")
 
 		if accountCreateErr != "" {
 			logger.Error("account 생성실패: ", accountCreateErr)
 		} else {
 			logger.Info("used key: { ", *accountKey, " }")
-			logger.Info("created account: { ", account, " }")
+			logger.Info("created account address: { ", address, " }")
 		}
 	} else if *isTransfer != "0" {
 		from := transfer.from
