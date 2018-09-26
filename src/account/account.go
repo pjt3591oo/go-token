@@ -46,6 +46,19 @@ func newAccount(cardId string) (string, bool) {
 	return converted, false
 }
 
+func GetAccountInfo(address string) (string, string) {
+	if AccountInvalidCheck(address) == true {
+		return "", "invalid address"
+	}
+
+	db, _ := leveldb.OpenFile(DB_DIRECTORY, nil)
+	defer db.Close()
+
+	accountAsBytes, _ := db.Get([]byte(address), nil)
+
+	return string(accountAsBytes), ""
+}
+
 func Allocation(cardId string, balance int, kind string) (string, string) {
 	createdAccount, isAccount := newAccount(cardId)
 
@@ -59,8 +72,9 @@ func Allocation(cardId string, balance int, kind string) (string, string) {
 	if err != nil {
 		return "", "디비 연결중 문제발생"
 	}
+	account := Account{Value: balance, Kind: kind, Address: createdAccount}
 
-	createdAccountAsBytes, _ := json.Marshal(createdAccount)
+	createdAccountAsBytes, _ := json.Marshal(account)
 	_ = db.Put([]byte(createdAccount), createdAccountAsBytes, nil)
 
 	return createdAccount, ""

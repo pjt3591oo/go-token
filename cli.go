@@ -35,6 +35,7 @@ func main() {
 	accountReceipt := flag.String("accountreceipt", "", "account의 receipt내역, root, last 조회")
 
 	searchTx := flag.String("searchtx", "", "transaction 조회")
+	searchAccount := flag.String("searchaccount", "", "account 조회")
 
 	flag.Parse()
 
@@ -80,6 +81,14 @@ func main() {
 		} else {
 			logger.Info(tx)
 		}
+	} else if *searchAccount != "" {
+		ac, accountErr := account.GetAccountInfo(*searchAccount)
+
+		if accountErr != "" {
+			logger.Error(accountErr)
+		} else {
+			logger.Info(ac)
+		}
 	} else {
 		msg := ` 
 	-accountreceipt string
@@ -90,6 +99,8 @@ func main() {
 			sender
 	-istransfer string
 			해당 옵션에 1을 전달할 경우 from, to, value 인자를 전달해야 함
+	-searchaccount string
+			account 조회
 	-searchreceipt string
 			receipt 조회
 	-searchtx string

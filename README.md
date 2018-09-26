@@ -29,6 +29,10 @@ $ ./cli
 $ go run cli.go
 ```
 
+### used
+
+* create account
+
 ### chaincode 
 
 [코드보러가기](https://github.com/pjt3591oo/hyperledger-fabric-token)
