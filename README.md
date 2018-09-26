@@ -1,4 +1,4 @@
-# demo token
+# demo token(chaincode 컨버팅 용)
 
 # 목차
 
