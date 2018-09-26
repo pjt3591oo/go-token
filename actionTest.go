@@ -190,11 +190,11 @@ func main() {
 
 	logger.Trace("============= delete transaction from database =============")
 	transactionDb.Delete([]byte(txId1), nil)
-	fmt.Println("deleted address1: ", txId1)
+	fmt.Println("deleted transaction: ", txId1)
 
 	logger.Trace("============= delete added transaction from database =============")
 	transactionDb.Delete([]byte(addTxId1), nil)
-	fmt.Println("deleted address1: ", addTxId1)
+	fmt.Println("deleted added transaction: ", addTxId1)
 
 	logger.Trace("============= delete root receipt from database =============")
 	receiptDb.Delete([]byte(ROOT_RECEIPT+address1+RECEIPT), nil)
@@ -211,12 +211,12 @@ func main() {
 	logger.Trace("============= delete node receipt from database =============")
 	receiptDb.Delete([]byte(NODE_RECEIPT+receiptIdIn+RECEIPT), nil)
 	receiptDb.Delete([]byte(NODE_RECEIPT+receiptIdOut+RECEIPT), nil)
-	fmt.Println("node receipt1: ", NODE_RECEIPT+receiptIdIn+RECEIPT)
-	fmt.Println("node receipt2: ", NODE_RECEIPT+receiptIdOut+RECEIPT)
+	fmt.Println("node receipt In: ", NODE_RECEIPT+receiptIdIn+RECEIPT)
+	fmt.Println("node receipt OUT: ", NODE_RECEIPT+receiptIdOut+RECEIPT)
 
 	logger.Trace("============= delete node added receipt from database =============")
 	receiptDb.Delete([]byte(NODE_RECEIPT+addReceiptIdIn+RECEIPT), nil)
 	receiptDb.Delete([]byte(NODE_RECEIPT+addReceiptIdOut+RECEIPT), nil)
-	fmt.Println("node receipt1: ", NODE_RECEIPT+addReceiptIdIn+RECEIPT)
-	fmt.Println("node receipt2: ", NODE_RECEIPT+addReceiptIdOut+RECEIPT)
+	fmt.Println("node added receipt IN: ", NODE_RECEIPT+addReceiptIdIn+RECEIPT)
+	fmt.Println("node added receipt OUT: ", NODE_RECEIPT+addReceiptIdOut+RECEIPT)
 }
