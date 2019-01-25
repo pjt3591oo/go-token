@@ -3,3 +3,4 @@ main
 cli
 actionTest
 /db
+.DS_Store
